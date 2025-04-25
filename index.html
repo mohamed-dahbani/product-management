@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Form Validation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <style>
+        img {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <form method="get" class="container border border-3 shadow rounded mt-3 mb-2 pb-3">
+        <div class="form-group mb-3">
+            <label for="id" class="form-label">id: </label>
+            <input type="text" name="id" id="id" class="form-control" disabled>
+        </div>
+        <div class="form-group mb-3">
+            <label for="intitulé" class="form-label">donner l'intitulé de la tache :</label>
+            <input type="text" name="intitulé" id="intitulé" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+            <label for="date" class="form-label">donner la date :</label>
+            <input type="date" name="date" id="date" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+            <label for="durée" class="form-label">donner la durée de la tache en minute:</label>
+            <input type="text" name="durée" id="durée" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="etat" class="form-label">etat:
+            </label>
+            <select name="etat" id="etat" class="form-select">
+                <option selected>ouvrir cette select menu</option>
+                <option value="En attente">En attente</option>
+                <option value="En cours">En cours</option>
+                <option value="terminé">terminé</option>
+            </select>
+        </div>
+        <button id="btn" class="btn btn-primary w-100">ajouter</button>
+    </form>
+    <table class="table table-hover text-nowrap container">
+        <thead>
+            <th>id</th>
+            <th>intitulé</th>
+            <th>date</th>
+            <th>durée</th>
+            <th>etat</th>
+            <th>modifier</th>
+            <th>supprimer</th>
+        </thead>
+    </table>
+    <script src="jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let id = 0;
+            $("#btn").click(function (e) {
+                e.preventDefault();
+                if ($(this).text() == "ajouter") {
+                    if (
+                        $("#intitulé").val().trim() === "" ||
+                        $("#date").val().trim() === "" ||
+                        $("#durée").val().trim() === "" ||
+                        $("#etat").val() === "ouvrir cette select menu" ||
+                        isNaN($("#durée").val().trim())
+                    ) {
+                        alert("Veuillez remplir tous les champs correctement.");
+                        return;
+                    }
+                    else {
+                        $("table").append(`
+                    <tr id=${id}>
+                        <td>${id}</td>
+                        <td>${$("#intitulé").val()}</td>
+                        <td>${$("#date").val()}</td>
+                        <td>${$("#durée").val()}</td>
+                        <td>${$("#etat").val()}</td>
+                        <td><img src="modifier-lutilisateur.png" alt="modification icon" id="modification"></td>
+                        <td><img src="bouton-supprimer.png" alt="suppression icon" id="suppression"></td>
+                    </tr>
+                    `)
+                        $("#intitulé").val("")
+                        $("#date").val("")
+                        $("#durée").val("")
+                        $("#etat").val("ouvrir cette select menu")
+                        $("td").addClass("text-center")
+                        id++;
+                    }
+                }
+                else if ($(this).text() == "modifier") {
+                    if (
+                        $("#intitulé").val().trim() === "" ||
+                        $("#date").val().trim() === "" ||
+                        $("#durée").val().trim() === "" ||
+                        $("#etat").val() === "ouvrir cette select menu" ||
+                        isNaN($("#durée").val().trim())
+                    ) {
+                        alert("Veuillez remplir tous les champs correctement.");
+                        return;
+                    } else {
+                        $(`#${$("#id").val()}`).html(`
+                        <td>${$("#id").val()}</td>
+                        <td>${$("#intitulé").val()}</td>
+                        <td>${$("#date").val()}</td>
+                        <td>${$("#durée").val()}</td>
+                        <td>${$("#etat").val()}</td>
+                        <td><img src="modifier-lutilisateur.png" alt="modification icon" id="modification"></td>
+                        <td><img src="bouton-supprimer.png" alt="suppression icon" id="suppression"></td>
+                    `)
+                        $("#intitulé").val("")
+                        $("#date").val("")
+                        $("#durée").val("")
+                        $("#etat").val("ouvrir cette select menu")
+                        $("#btn").text("ajouter")
+                        $("td").addClass("text-center");
+                    }
+                }
+            })
+            $("table").on("click", "#suppression", function () {
+                $(this).parent().parent().remove();
+
+            })
+            $("table").on("click", "#modification", function () {
+                let arr = $(this).parent().parent().html().split(/(<td class="text-center">|<\/td>)/g);
+                arr = arr.filter(ele => ele != `<td class="text-center">` && ele != `</td>` && ele != "\n                        ")
+
+                $("#id").val(arr[0])
+                $("#intitulé").val(arr[1])
+                $("#date").val(arr[2])
+                $("#durée").val(arr[3])
+                $("#etat").val(arr[4])
+                $("#btn").text("modifier");
+            });
+            $("th").addClass("text-center");
+            $("#id").val("");
+            $("#intitulé").val("");
+            $("#date").val("");
+            $("#durée").val("");
+            $("#etat").val("ouvrir cette select menu");
+        })
+
+    </script>
+</body>
+
+</html>
